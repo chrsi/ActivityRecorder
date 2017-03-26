@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import at.csiber.activityrecorder.recorders.acceleration.AccelerationRecorder;
 import at.csiber.activityrecorder.recorders.location.LocationRecorder;
 
 /**
@@ -15,6 +16,7 @@ import at.csiber.activityrecorder.recorders.location.LocationRecorder;
  */
 public class RecorderDirectory {
     public static final String LOCATION_RECORDER = "at.csiber.activityrecorder.recorders.LOCATION_RECORDER";
+    public static final String ACCELERATION_RECORDER = "at.csiber.activityrecorder.recorders.ACCELERATION_RECORDER";
 
     //<editor-fold desc="Singleton">
     public static RecorderDirectory recorderDirectoryInstance;
@@ -34,6 +36,7 @@ public class RecorderDirectory {
     private RecorderDirectory(Context ctx){
         recorders = new Hashtable<>();
         recorders.put(LOCATION_RECORDER, new LocationRecorder(ctx));
+        recorders.put(ACCELERATION_RECORDER, new AccelerationRecorder(ctx));
     }
 
     private Dictionary<String, RecorderInterface> recorders;
