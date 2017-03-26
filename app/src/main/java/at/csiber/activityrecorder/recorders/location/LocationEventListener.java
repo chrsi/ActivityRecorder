@@ -4,25 +4,20 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 
+import at.csiber.activityrecorder.recorders.AbstractEventListener;
 import at.csiber.activityrecorder.recorders.RecordNotifier;
 
 /**
  * Event Listener for Location Updates
  */
-public class LocationEventListener implements LocationListener {
-    private RecordNotifier<Location> recordNotifier;
-
-    /**
-     * Creates an LocationEventListener object
-     * @param recordNotifier is used to notify various subscriber about location updates
-     */
-    public LocationEventListener(RecordNotifier<Location> recordNotifier){
-        this.recordNotifier = recordNotifier;
+public class LocationEventListener extends AbstractEventListener<Location> implements LocationListener {
+    public LocationEventListener(RecordNotifier<Location> recordNotifier) {
+        super(recordNotifier);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        recordNotifier.notify(location);
+        getRecordNotifier().notify(location);
     }
 
     @Override
