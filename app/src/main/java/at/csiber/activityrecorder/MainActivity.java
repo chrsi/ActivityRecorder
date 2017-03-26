@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.SensorEvent;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class MainActivity   extends Activity
 
         RecorderDirectory recorderDirectory = RecorderDirectory.getInstance(this);
         addLocationStatusUpdates(recorderDirectory);
+        addAccelerationStatusUpdates(recorderDirectory);
 
         //TODO: check for location permission
         if (    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -47,6 +49,17 @@ public class MainActivity   extends Activity
             public void HandleNotification(String value) {
                 //TODO: change status view
                 TextView statusView = (TextView) findViewById(R.id.txtStatus);
+                statusView.setText(value);
+            }
+        });
+    }
+
+    private void addAccelerationStatusUpdates(RecorderDirectory recorderDirectory){
+        RecorderInterface<SensorEvent> accelerationRecorder = recorderDirectory.getRecorder(RecorderDirectory.ACCELERATION_RECORDER);
+        accelerationRecorder.addNotificationHandler(new RecordNotificationHandler() {
+            @Override
+            public void HandleNotification(String value) {
+                TextView statusView = (TextView) findViewById(R.id.txtAccStatus);
                 statusView.setText(value);
             }
         });
