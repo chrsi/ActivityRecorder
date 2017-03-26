@@ -17,4 +17,9 @@
         android:id="@+id/btnStop"
         android:text="Stop"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/txtStatus" />
 </LinearLayout>
