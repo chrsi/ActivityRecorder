@@ -54,7 +54,7 @@ public class RecordingService extends Service {
         return START_REDELIVER_INTENT;
     }
 
-    RecorderInterface<Location> locationRecorder;
+    private RecorderInterface<Location> locationRecorder;
     private RecorderInterface<SensorEvent> accelerationRecorder;
 
     @Override
