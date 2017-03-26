@@ -1,18 +1,17 @@
 package at.csiber.activityrecorder;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
-
-import java.util.zip.Inflater;
 
 public class CheckPasswordFragment extends DialogFragment {
 
@@ -59,5 +58,16 @@ public class CheckPasswordFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.checkpassword, container);
+        EditText editText = (EditText) view.findViewById(R.id.pwd);
 
+        //Request focus. The keyboard should show up when the fragment starts.
+        editText.requestFocus();
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        return view;
+    }
 }
