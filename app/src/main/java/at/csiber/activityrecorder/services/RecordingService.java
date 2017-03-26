@@ -30,6 +30,7 @@ import java.util.TimerTask;
 
 import at.csiber.activityrecorder.recorders.RecorderDirectory;
 import at.csiber.activityrecorder.recorders.RecorderInterface;
+import at.csiber.activityrecorder.recorders.acceleration.AccelerationRecorder;
 
 /**
  * Service for handling the Lifecycle of the various Recorders
