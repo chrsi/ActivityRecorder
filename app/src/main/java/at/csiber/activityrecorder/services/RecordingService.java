@@ -48,16 +48,19 @@ public class RecordingService extends Service {
         checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
 
         locationRecorder.start();
+        accelerationRecorder.start();
 
         return START_REDELIVER_INTENT;
     }
 
     RecorderInterface<Location> locationRecorder;
+    private RecorderInterface<SensorEvent> accelerationRecorder;
 
     @Override
     public void onDestroy() {
         //TODO stop recording entities
         locationRecorder.stop();
+        accelerationRecorder.stop();
     }
 
     @Override
@@ -69,7 +72,7 @@ public class RecordingService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        //TODO create recording entities
         locationRecorder = recorderDirectory.getRecorder(RecorderDirectory.LOCATION_RECORDER);
+        accelerationRecorder = recorderDirectory.getRecorder(RecorderDirectory.ACCELERATION_RECORDER);
     }
 }
