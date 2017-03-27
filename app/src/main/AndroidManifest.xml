@@ -23,9 +23,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.RecordingService"/>
-        <service android:name=".services.LocationLogger" />
-        <service android:name=".services.AccelerationLogger" />
+        <service android:name=".services.recording.RecordingService"/>
+        <service android:name=".services.logging.LocationLogger" />
+        <service android:name=".services.logging.AccelerationLogger" />
     </application>
 
 </manifest>

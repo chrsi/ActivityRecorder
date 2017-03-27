@@ -6,11 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import at.csiber.activityrecorder.recorders.AbstractRecordNotifier;
+import at.csiber.activityrecorder.recorders.AbstractRecorder;
 import at.csiber.activityrecorder.recorders.RecorderInterface;
 
 public class AccelerationRecorder extends AbstractRecorder<SensorEvent, Acceleration> implements RecorderInterface<Acceleration> {

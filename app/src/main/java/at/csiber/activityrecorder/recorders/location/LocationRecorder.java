@@ -3,7 +3,7 @@ package at.csiber.activityrecorder.recorders.location;
 import android.content.Context;
 import android.location.LocationManager;
 
-import at.csiber.activityrecorder.recorders.AbstractRecordNotifier;
+import at.csiber.activityrecorder.recorders.AbstractRecorder;
 import at.csiber.activityrecorder.recorders.RecorderInterface;
 
 public class LocationRecorder extends AbstractRecorder<android.location.Location, Location>

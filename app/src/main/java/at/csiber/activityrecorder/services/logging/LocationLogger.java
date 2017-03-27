@@ -1,6 +1,6 @@
-package at.csiber.activityrecorder.services;
+package at.csiber.activityrecorder.services.logging;
 
-import android.location.Location;
+import at.csiber.activityrecorder.recorders.location.Location;
 
 import static at.csiber.activityrecorder.recorders.RecorderDirectory.LOCATION_RECORDER;
 
@@ -16,5 +16,10 @@ public class LocationLogger extends LoggingService<Location> {
     @Override
     protected String getRecorderType() {
         return LOCATION_RECORDER;
+    }
+
+    @Override
+    protected String createString(Location event) {
+        return event.getLatitude() + SEPERATOR + event.getLongitude() + SEPERATOR + event.getProvider();
     }
 }

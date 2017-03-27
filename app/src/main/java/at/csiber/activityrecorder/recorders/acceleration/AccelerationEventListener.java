@@ -1,14 +1,16 @@
 package at.csiber.activityrecorder.recorders.acceleration;
 
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorListener;
 
 import at.csiber.activityrecorder.recorders.AbstractEventListener;
-import at.csiber.activityrecorder.recorders.RecordNotifier;
+import at.csiber.activityrecorder.recorders.AbstractRecorder;
 
+/**
+ * Event Listener for Acceleration Updates
+ */
 public class AccelerationEventListener extends AbstractEventListener<SensorEvent, Acceleration> implements SensorListener, SensorEventListener {
 
     public AccelerationEventListener(AbstractRecorder<SensorEvent, Acceleration> recordNotifier) {
@@ -21,14 +23,11 @@ public class AccelerationEventListener extends AbstractEventListener<SensorEvent
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {    }
 
     @Override
-    public void onSensorChanged(int sensor, float[] values) {
-    }
+    public void onSensorChanged(int sensor, float[] values) {    }
 
     @Override
-    public void onAccuracyChanged(int sensor, int accuracy) {
-    }
+    public void onAccuracyChanged(int sensor, int accuracy) {    }
 }

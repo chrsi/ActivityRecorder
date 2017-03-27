@@ -17,9 +17,11 @@ import java.util.Map;
 import at.csiber.activityrecorder.recorders.RecordNotificationHandler;
 import at.csiber.activityrecorder.recorders.RecorderDirectory;
 import at.csiber.activityrecorder.recorders.RecorderInterface;
-import at.csiber.activityrecorder.services.AccelerationLogger;
-import at.csiber.activityrecorder.services.LocationLogger;
-import at.csiber.activityrecorder.services.RecordingService;
+import at.csiber.activityrecorder.recorders.acceleration.Acceleration;
+import at.csiber.activityrecorder.recorders.location.Location;
+import at.csiber.activityrecorder.services.logging.AccelerationLogger;
+import at.csiber.activityrecorder.services.logging.LocationLogger;
+import at.csiber.activityrecorder.services.recording.RecordingService;
 
 public class MainActivity   extends Activity
         implements CheckPasswordFragment.CheckPasswordListener{

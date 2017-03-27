@@ -1,4 +1,4 @@
-package at.csiber.activityrecorder.services;
+package at.csiber.activityrecorder.services.logging;
 
 import android.Manifest;
 import android.app.Service;
@@ -29,6 +29,10 @@ public abstract class LoggingService<T> extends Service {
     private FileOutputStream fos;
     private OutputStreamWriter writer;
     private File logFile;
+
+    protected static final String SEPERATOR = ";";
+
+    private static final DateFormat LOG_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     //Defines the identifier for the log file.
     protected abstract String getFileIdentifier();
@@ -73,6 +77,8 @@ public abstract class LoggingService<T> extends Service {
                                 filePrefix + "-" + nrOfFiles + ".csv";
     }
 
+    protected abstract String createString(T event);
+
     @Override
     public void onCreate() {
         //Initialize recorder
@@ -112,11 +118,15 @@ public abstract class LoggingService<T> extends Service {
         super.onDestroy();
     }
 
-    private RecordNotificationHandler fileLogger = new RecordNotificationHandler(){
+    private String getTime(){
+        return LOG_DATE_FORMAT.format(Calendar.getInstance().getTime());
+    }
+
+    private RecordNotificationHandler fileLogger = new RecordNotificationHandler<T>(){
         @Override
-        public void HandleNotification(String value) {
+        public void HandleNotification(T value) {
             try {
-                writer.write(value + "\n");
+                writer.write(getTime() + SEPERATOR + createString(value) + "\n");
             } catch (IOException e) {
                 //TODO: handle errors
                 e.printStackTrace();
