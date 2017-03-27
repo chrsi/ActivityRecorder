@@ -13,9 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import at.csiber.activityrecorder.recorders.RecordNotificationHandler;
 import at.csiber.activityrecorder.recorders.RecorderDirectory;
 import at.csiber.activityrecorder.recorders.RecorderInterface;
+import at.csiber.activityrecorder.services.AccelerationLogger;
+import at.csiber.activityrecorder.services.LocationLogger;
 import at.csiber.activityrecorder.services.RecordingService;
 
 public class MainActivity   extends Activity
@@ -23,7 +28,7 @@ public class MainActivity   extends Activity
 
     private static final String TAG = "MainActivity";
     public static final int MY_LOCATION_PERMISSION_REQUEST = 1093424845;
-
+    public static final int WRITE_EXT_REQUEST = 394859781;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,10 @@ public class MainActivity   extends Activity
         if (    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, MY_LOCATION_PERMISSION_REQUEST);
+            return;
+        }
+        if (    ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXT_REQUEST);
             return;
         }
     }
@@ -89,7 +98,7 @@ public class MainActivity   extends Activity
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case MY_LOCATION_PERMISSION_REQUEST: {
+            default: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -102,21 +111,36 @@ public class MainActivity   extends Activity
     }
     //</editor-fold>
 
-    //<editor-fold desc="Recording Service">
-    Intent recordingIntent = null;
+    //<editor-fold desc="Handle Services">
+    Map<String, Intent> intentMap = new HashMap<>();
 
-    public void startRecording(){
-        if (recordingIntent == null) {
-            recordingIntent = new Intent(this, RecordingService.class);
-            startService(recordingIntent);
+    private void startServiceIntent(Class<?> service){
+        if (intentMap.get(service.getName()) == null){
+            Intent intent = new Intent(this, service);
+            startService(intent);
+            intentMap.put(service.getName(), intent);
+        }
+
+    }
+
+    private void endServiceIntent(Class<?> service){
+        if (intentMap.containsKey(service.getName())){
+            Intent intent = intentMap.get(service.getName());
+            stopService(intent);
+            intentMap.remove(service.getName());
         }
     }
 
+    public void startRecording(){
+        startServiceIntent(LocationLogger.class);
+        startServiceIntent(AccelerationLogger.class);
+        startServiceIntent(RecordingService.class);
+    }
+
     public void stopRecording(){
-        if (recordingIntent != null){
-            stopService(recordingIntent);
-            recordingIntent = null;
-        }
+        endServiceIntent(LocationLogger.class);
+        endServiceIntent(AccelerationLogger.class);
+        endServiceIntent(RecordingService.class);
     }
     //</editor-fold>
 
