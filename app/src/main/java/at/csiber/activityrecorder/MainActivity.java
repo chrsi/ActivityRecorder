@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.SensorEvent;
-import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.view.View;
@@ -53,23 +51,22 @@ public class MainActivity   extends Activity
 
     private void addLocationStatusUpdates(RecorderDirectory recorderDirectory){
         RecorderInterface<Location> locationRecorder = recorderDirectory.getRecorder(RecorderDirectory.LOCATION_RECORDER);
-        locationRecorder.addNotificationHandler(new RecordNotificationHandler() {
+        locationRecorder.addNotificationHandler(new RecordNotificationHandler<Location>() {
             @Override
-            public void HandleNotification(String value) {
-                //TODO: change status view
+            public void HandleNotification(Location value) {
                 TextView statusView = (TextView) findViewById(R.id.txtStatus);
-                statusView.setText(value);
+                statusView.setText("Location from " + value.getProvider() + ": " + value.getLatitude() + ", " + value.getLongitude());
             }
         });
     }
 
     private void addAccelerationStatusUpdates(RecorderDirectory recorderDirectory){
-        RecorderInterface<SensorEvent> accelerationRecorder = recorderDirectory.getRecorder(RecorderDirectory.ACCELERATION_RECORDER);
-        accelerationRecorder.addNotificationHandler(new RecordNotificationHandler() {
+        RecorderInterface<Acceleration> accelerationRecorder = recorderDirectory.getRecorder(RecorderDirectory.ACCELERATION_RECORDER);
+        accelerationRecorder.addNotificationHandler(new RecordNotificationHandler<Acceleration>() {
             @Override
-            public void HandleNotification(String value) {
+            public void HandleNotification(Acceleration value) {
                 TextView statusView = (TextView) findViewById(R.id.txtAccStatus);
-                statusView.setText(value);
+                statusView.setText("Acceleration: \n" + value.getX() + "\n" + value.getY() + "\n" + value.getZ());
             }
         });
     }

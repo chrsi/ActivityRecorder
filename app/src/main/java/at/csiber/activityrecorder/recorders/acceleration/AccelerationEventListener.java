@@ -9,9 +9,9 @@ import android.hardware.SensorListener;
 import at.csiber.activityrecorder.recorders.AbstractEventListener;
 import at.csiber.activityrecorder.recorders.RecordNotifier;
 
-public class AccelerationEventListener extends AbstractEventListener implements SensorListener, SensorEventListener {
+public class AccelerationEventListener extends AbstractEventListener<SensorEvent, Acceleration> implements SensorListener, SensorEventListener {
 
-    public AccelerationEventListener(RecordNotifier recordNotifier) {
+    public AccelerationEventListener(AbstractRecorder<SensorEvent, Acceleration> recordNotifier) {
         super(recordNotifier);
     }
 

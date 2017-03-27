@@ -13,7 +13,7 @@ import java.util.Calendar;
 import at.csiber.activityrecorder.recorders.AbstractRecordNotifier;
 import at.csiber.activityrecorder.recorders.RecorderInterface;
 
-public class AccelerationRecorder extends AbstractRecordNotifier<SensorEvent> implements RecorderInterface<SensorEvent> {
+public class AccelerationRecorder extends AbstractRecorder<SensorEvent, Acceleration> implements RecorderInterface<Acceleration> {
 
     private SensorManager sensorManager;
     private Sensor accelerationSensor;
@@ -26,13 +26,8 @@ public class AccelerationRecorder extends AbstractRecordNotifier<SensorEvent> im
     }
 
     @Override
-    protected String convertToString(SensorEvent record) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        Calendar c = Calendar.getInstance();
-        String now = df.format(c.getTime());
-
-        //TODO: fix string format
-        return now + " from accelerometer: " + record.values[0] + " / " + record.values[1] + " / " + record.values[2];
+    protected Acceleration convertToDomain(SensorEvent record) {
+        return new Acceleration(record.values[0], record.values[1], record.values[2]);
     }
 
     @Override
