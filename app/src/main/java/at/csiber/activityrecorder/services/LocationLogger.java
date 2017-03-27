@@ -9,7 +9,12 @@ import static at.csiber.activityrecorder.recorders.RecorderDirectory.LOCATION_RE
  */
 public class LocationLogger extends LoggingService<Location> {
     @Override
-    protected String GetRecorderType() {
+    protected String getFileIdentifier() {
+        return "loc";
+    }
+
+    @Override
+    protected String getRecorderType() {
         return LOCATION_RECORDER;
     }
 }

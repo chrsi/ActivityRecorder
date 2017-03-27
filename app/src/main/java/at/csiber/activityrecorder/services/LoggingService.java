@@ -3,16 +3,18 @@ package at.csiber.activityrecorder.services;
 import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Environment;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import at.csiber.activityrecorder.recorders.RecordNotificationHandler;
 import at.csiber.activityrecorder.recorders.RecorderDirectory;
@@ -28,13 +30,47 @@ public abstract class LoggingService<T> extends Service {
     private OutputStreamWriter writer;
     private File logFile;
 
+    //Defines the identifier for the log file.
+    protected abstract String getFileIdentifier();
+
     //Defines the used Recorder. (e.g. RecorderDirectory.LOCATION_RECORDER for location)
-    protected abstract String GetRecorderType();
+    protected abstract String getRecorderType();
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    /**
+     * Creates a unique fileName using a counter variable as postfix.
+     * Format: Date-fileName[-CounterVar].csv
+     * The counter variable is optional. The name of the first file does not contain it.
+     * @param directory that contains the files
+     * @return a fileName with optional counter at the end.
+     */
+    private String getFileName(File directory, String fileName){
+        //Calculate Current Day
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        String currentDay = df.format(c.getTime());
+
+        //Create File with the format: Date-fileName
+        final String filePrefix = currentDay + "-" + fileName;
+
+        //TODO: could cause an exception if an existing file will be deleted.
+        // This will happen, because it only appends the number of files inside the directory.
+        // It does not check whether it exists or not.
+        int nrOfFiles = directory.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.getName().startsWith(filePrefix);
+            }
+        }).length;
+
+        //Append the number only if there already exists a file with the format: Date-fileName
+        return nrOfFiles == 0 ? filePrefix + ".csv" :
+                                filePrefix + "-" + nrOfFiles + ".csv";
     }
 
     @Override
@@ -43,7 +79,7 @@ public abstract class LoggingService<T> extends Service {
         checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         RecorderDirectory recorderDirectory = RecorderDirectory.getInstance(this);
-        recorder = recorderDirectory.getRecorder(GetRecorderType());
+        recorder = recorderDirectory.getRecorder(getRecorderType());
 
         //Initialize log directory
         // Use SD Card as External Storage, because it provides more capacity: currently 32GB
@@ -51,7 +87,7 @@ public abstract class LoggingService<T> extends Service {
         logFileDir.mkdirs();
 
         //Initialize log file
-        logFile = new File(logFileDir, GetRecorderType() + ".csv");
+        logFile = new File(logFileDir, getFileName(logFileDir, getFileIdentifier()));
         try {
             logFileDir.createNewFile();
         } catch (IOException e) {

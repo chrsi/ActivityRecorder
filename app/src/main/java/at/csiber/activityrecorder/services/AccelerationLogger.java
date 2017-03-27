@@ -9,7 +9,12 @@ import static at.csiber.activityrecorder.recorders.RecorderDirectory.ACCELERATIO
  */
 public class AccelerationLogger extends LoggingService<SensorEvent> {
     @Override
-    protected String GetRecorderType() {
+    protected String getFileIdentifier() {
+        return "acc";
+    }
+
+    @Override
+    protected String getRecorderType() {
         return ACCELERATION_RECORDER;
     }
 }
