@@ -8,7 +8,9 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -34,6 +36,7 @@ public class MainActivity   extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setButtons();
+        initializeSpinner();
 
         RecorderDirectory recorderDirectory = RecorderDirectory.getInstance(this);
         addLocationStatusUpdates(recorderDirectory);
@@ -49,6 +52,13 @@ public class MainActivity   extends Activity
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXT_REQUEST);
             return;
         }
+    }
+
+    private void initializeSpinner() {
+        Spinner activityTypeSpinner = (Spinner) findViewById(R.id.spnActivityType);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.activity_type, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        activityTypeSpinner.setAdapter(adapter);
     }
 
     private void addLocationStatusUpdates(RecorderDirectory recorderDirectory){
