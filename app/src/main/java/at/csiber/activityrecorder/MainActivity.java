@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -27,6 +29,9 @@ import at.csiber.activityrecorder.services.recording.RecordingService;
 
 public class MainActivity   extends Activity
         implements CheckPasswordFragment.CheckPasswordListener{
+
+    public static final String SET_ACTIVITY_TYPE_MESSAGE = "at.csiber.activityrecorder.SET_ACTIVITY_TYPE";
+    public static final String SET_ACTIVITY_TYPE_DATA = "ACTIVITY_TYPE";
 
     private static final String TAG = "MainActivity";
     public static final int MY_LOCATION_PERMISSION_REQUEST = 1093424845;
@@ -59,6 +64,34 @@ public class MainActivity   extends Activity
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.activity_type, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         activityTypeSpinner.setAdapter(adapter);
+
+        //TODO extract itemlistener to its own class
+        activityTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
+                intent.setAction(SET_ACTIVITY_TYPE_MESSAGE);
+
+                String selectedActivity = parent.getItemAtPosition(position).toString();
+                switch(selectedActivity){
+                    case "Running":
+                        intent.putExtra(SET_ACTIVITY_TYPE_DATA, "RUNNING");
+                        break;
+                    case "Cycling":
+                        intent.putExtra(SET_ACTIVITY_TYPE_DATA, "CYCLING");
+                        break;
+                    default:
+                        intent.putExtra(SET_ACTIVITY_TYPE_DATA, "OTHER");
+                        break;
+                }
+
+                LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     private void addLocationStatusUpdates(RecorderDirectory recorderDirectory){

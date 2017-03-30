@@ -2,9 +2,13 @@ package at.csiber.activityrecorder.services.logging;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -16,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import at.csiber.activityrecorder.MainActivity;
 import at.csiber.activityrecorder.recorders.RecordNotificationHandler;
 import at.csiber.activityrecorder.recorders.RecorderDirectory;
 import at.csiber.activityrecorder.recorders.RecorderInterface;
@@ -87,6 +92,9 @@ public abstract class LoggingService<T> extends Service {
         RecorderDirectory recorderDirectory = RecorderDirectory.getInstance(this);
         recorder = recorderDirectory.getRecorder(getRecorderType());
 
+        //Set ActivityType Spinner Listener
+        setActivityTypeListener();
+
         //Initialize log directory
         // Use SD Card as External Storage, because it provides more capacity: currently 32GB
         File logFileDir = getExternalFilesDirs(null)[1];
@@ -100,6 +108,17 @@ public abstract class LoggingService<T> extends Service {
             //TODO: handle errors
             e.printStackTrace();
         }
+    }
+
+    private String ActivityType = "OTHER";
+
+    private void setActivityTypeListener() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ActivityType = intent.getStringExtra(MainActivity.SET_ACTIVITY_TYPE_DATA);
+            }
+        }, new IntentFilter(MainActivity.SET_ACTIVITY_TYPE_MESSAGE));
     }
 
     @Override
@@ -126,7 +145,7 @@ public abstract class LoggingService<T> extends Service {
         @Override
         public void HandleNotification(T value) {
             try {
-                writer.write(getTime() + SEPERATOR + createString(value) + "\n");
+                writer.write(getTime() + SEPERATOR + createString(value) + SEPERATOR + ActivityType + "\n");
             } catch (IOException e) {
                 //TODO: handle errors
                 e.printStackTrace();
